@@ -29,6 +29,10 @@ public class MyTimeTrigger
             var result = cmd.ExecuteScalar();
             _logger.LogInformation($"First table: {result}");
         }
+        else
+        {
+            _logger.LogWarning("SQL connection string not found in environment variables.");
+        }
 
         if (myTimer.ScheduleStatus is not null)
         {
