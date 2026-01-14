@@ -1,3 +1,5 @@
 <Solution>
   <Project Path="AzureMultiFunc/AzureMultiFunc.csproj" />
+  <Project Path="BusinessLogic/BusinessLogic.csproj" Id="ab356bae-4072-4ef5-9da4-6dc422a564d7" />
+  <Project Path="Data/Data.csproj" Id="f95c4731-2424-46a2-9e2f-45c1fecab33f" />
 </Solution>

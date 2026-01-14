@@ -1,39 +1,34 @@
-using System;
+using BusinessLogic;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace AzureMultiFunc;
 
 public class MyTimeTrigger
 {
     private readonly ILogger _logger;
+    private readonly IDataService _dataService;
 
-    public MyTimeTrigger(ILoggerFactory loggerFactory)
+    public MyTimeTrigger(ILoggerFactory loggerFactory, IDataService dataService)
     {
+        _dataService = dataService;
         _logger = loggerFactory.CreateLogger<MyTimeTrigger>();
     }
 
     [Function("MyTimeTrigger")]
-    public void Run([TimerTrigger("0 */1 * * * *")] TimerInfo myTimer)
+    public void Run(
+        //[TimerTrigger("0 */1 * * * *")]
+        [TimerTrigger("0 0 0 30 2 *")]
+        TimerInfo myTimer
+        )
     {
         _logger.LogInformation("C# Timer trigger function executed at: {executionTime}", DateTime.Now);
+        var data = _dataService.GetProducts();
 
-        string connStr = Environment.GetEnvironmentVariable("SqlConnectionString");
-        if (!string.IsNullOrEmpty(connStr))
-        {
-            _logger.LogInformation($"Found connection: {connStr}");
-            using SqlConnection conn = new SqlConnection(connStr);
-            conn.Open();
-            SqlCommand cmd = new SqlCommand("SELECT TOP 1 name FROM sys.tables", conn);
-            var result = cmd.ExecuteScalar();
-            _logger.LogInformation($"First table: {result}");
-        }
-        else
-        {
-            _logger.LogWarning("SQL connection string not found in environment variables.");
-        }
-
+        _logger.LogInformation($"Retrieved {data.Count} products from the data service." );
         if (myTimer.ScheduleStatus is not null)
         {
             _logger.LogInformation("Next timer schedule at: {nextSchedule}", myTimer.ScheduleStatus.Next);
