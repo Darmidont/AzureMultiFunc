@@ -1,8 +1,9 @@
-﻿using Data;
+﻿using BusinessLogic.Interfaces;
+using Data;
 using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace BusinessLogic
+namespace BusinessLogic.Services
 {
     public sealed class DataService : IDataService
     {
@@ -14,12 +15,12 @@ namespace BusinessLogic
             _productsDbContext = productsDbContext;
         }
 
-        public IList<Product> GetProducts()
+        public async Task<IList<Product>> GetProducts()
         {
-            var products = _productsDbContext.Products.AsNoTracking().Include(pr => pr.Reviews)
+            var products = await _productsDbContext.Products.AsNoTracking().Include(pr => pr.Reviews)
                 .Include(_ => _.Summary)
                 .Where(x => x.Reviews.Count >=MinimumReviewCount && x.Summary == null)
-                .ToList();
+                .ToListAsync();
 
             return products;
         }

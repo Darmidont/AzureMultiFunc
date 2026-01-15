@@ -1,38 +1,38 @@
-using BusinessLogic;
+using System.Diagnostics;
+using BusinessLogic.Interfaces;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
-using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace AzureMultiFunc;
 
 public class MyTimeTrigger
 {
     private readonly ILogger _logger;
-    private readonly IDataService _dataService;
+    private readonly IProductProcessor _productProcessor;
 
-    public MyTimeTrigger(ILoggerFactory loggerFactory, IDataService dataService)
+    public MyTimeTrigger(ILoggerFactory loggerFactory, IProductProcessor productProcessor)
     {
-        _dataService = dataService;
+        _productProcessor = productProcessor;
         _logger = loggerFactory.CreateLogger<MyTimeTrigger>();
     }
 
     [Function("MyTimeTrigger")]
+<<<<<<< HEAD
+=======
 
+>>>>>>> 79eda24165ab6848e22af18efe2e10670b93d735
     public async Task Run(
         //[TimerTrigger("0 */1 * * * *")]
         [TimerTrigger("0 0 0 30 2 *")]
         TimerInfo myTimer
-        )
+    )
     {
         _logger.LogInformation("C# Timer trigger function executed at: {executionTime}", DateTime.Now);
-        var data = _dataService.GetProducts();
+        Stopwatch sw = Stopwatch.StartNew();
 
-        _logger.LogInformation($"Retrieved {data.Count} products from the data service." );
+        var data = await _productProcessor.ProcessProductsAsync();
+        sw.Stop();
         if (myTimer.ScheduleStatus is not null)
-        {
             _logger.LogInformation("Next timer schedule at: {nextSchedule}", myTimer.ScheduleStatus.Next);
-        }
     }
 }

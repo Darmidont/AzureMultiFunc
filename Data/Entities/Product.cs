@@ -7,6 +7,6 @@
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
-        public ProductSummary Summary { get; set; } = null!;
+        public ProductSummary? Summary { get; set; } = null!;
     }
 }

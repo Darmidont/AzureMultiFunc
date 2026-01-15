@@ -1,4 +1,5 @@
-using BusinessLogic;
+using BusinessLogic.Interfaces;
+using BusinessLogic.Services;
 using Data;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Builder;
@@ -22,6 +23,8 @@ connStr = builder.Environment.IsDevelopment() ? Environment.GetEnvironmentVariab
 
 builder.Services.AddDbContext<ProductsDbContext>(options =>
     options.UseSqlServer(connStr));
+builder.Services.AddScoped<IProductProcessor, ProductProcessor>();
+builder.Services.AddScoped<IAiReviewGenerator, AiReviewGenerator>();
 builder.Services.AddScoped<IDataService, DataService>();
 builder.Services.AddScoped<IProductsDbContext, ProductsDbContext>();
 
