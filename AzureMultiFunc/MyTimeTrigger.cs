@@ -17,10 +17,6 @@ public class MyTimeTrigger
     }
 
     [Function("MyTimeTrigger")]
-<<<<<<< HEAD
-=======
-
->>>>>>> 79eda24165ab6848e22af18efe2e10670b93d735
     public async Task Run(
         //[TimerTrigger("0 */1 * * * *")]
         [TimerTrigger("0 0 0 30 2 *")]
