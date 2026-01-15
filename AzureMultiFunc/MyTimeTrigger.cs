@@ -19,7 +19,8 @@ public class MyTimeTrigger
     }
 
     [Function("MyTimeTrigger")]
-    public void Run(
+
+    public async Task Run(
         //[TimerTrigger("0 */1 * * * *")]
         [TimerTrigger("0 0 0 30 2 *")]
         TimerInfo myTimer
